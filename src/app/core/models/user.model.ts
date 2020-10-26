@@ -17,4 +17,5 @@
     displayName: string;
     photoURL: string;
     provider: string;
+    role:string;
  }

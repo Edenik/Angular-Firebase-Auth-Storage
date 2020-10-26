@@ -106,6 +106,12 @@ export class UserScreenComponent implements OnInit {
 
   }
 
+  changeRole(role:string){
+    this.user.role = role;
+    this.setUserData();
+
+  }
+
   setUserData(){
     this.userService.SetUserData(this.user).then(res => {
       this.isLoading = false;

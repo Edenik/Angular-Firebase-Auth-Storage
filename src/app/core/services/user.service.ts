@@ -34,7 +34,6 @@ export class UserService{
 
  
    SetUserData(user:FirebaseUserModel) {
-     console.error(user)
     const userRef: AngularFirestoreDocument<any> = this.db.doc(`users/${user.uid}`);
 
     return userRef.set(user, {

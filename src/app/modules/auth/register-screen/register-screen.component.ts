@@ -75,7 +75,8 @@ export class RegisterScreenComponent implements OnInit {
               email: value.email,
               displayName: value.username,
               photoURL: uploadedPhotoURL,
-              provider: user.providerData[0].providerId
+              provider: user.providerData[0].providerId,
+              role: 'user'
             }
 
             //Set user data on database

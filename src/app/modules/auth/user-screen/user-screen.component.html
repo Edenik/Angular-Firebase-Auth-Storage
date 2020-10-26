@@ -14,9 +14,17 @@
       <input type="button" value="Browse..." onclick="document.getElementById('selectedFile').click();" />
 
 
+
       <div class="card-body">
         <h4 class="card-title">{{user.displayName}}</h4>
         <p class="card-text">Connected with: {{user.provider}}</p>
+        <p class="card-text">Role: {{user.role}}</p>
+
+        <a (click)="changeRole('admin')" class="btn btn-primary">Change to admin</a>
+        <a (click)="changeRole('user')" class="btn btn-primary">Change to user</a>
+        <a (click)="changeRole('moderator')" class="btn btn-primary">Change to moderator</a>
+
+
         <form [formGroup]="profileForm">
           <div class="form-group">
             <label>Your name</label>

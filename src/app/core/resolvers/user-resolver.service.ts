@@ -24,7 +24,8 @@ export class UserResolverService implements Resolve<FirebaseUserModel> {
             email: userFromDB.email, 
             displayName: userFromDB.displayName, 
             photoURL: userFromDB.photoURL, 
-            provider: userFromDB.provider 
+            provider: userFromDB.provider,
+            role:userFromDB.role
           };
 
           return resolve(this.user);

@@ -15,7 +15,12 @@ export class AuthService {
     return new Promise<any>((resolve, reject) => {
       let provider = new auth.FacebookAuthProvider();
       this.afAuth.signInWithPopup(provider).then(res => {
-        resolve(res);
+        this.saveUserOnDB(res).then(_ => {
+          resolve(res);
+        }, err => {
+          reject(err);
+        })
+
       }, err => {
         console.log(err);
         reject(err);
@@ -23,11 +28,19 @@ export class AuthService {
     })
   }
 
+ 
+
   doTwitterLogin() {
+
     return new Promise<any>((resolve, reject) => {
       let provider = new auth.TwitterAuthProvider();
       this.afAuth.signInWithPopup(provider).then(res => {
-        resolve(res);
+        this.saveUserOnDB(res).then(_ => {
+          resolve(res);
+        }, err => {
+          reject(err);
+        })
+
       }, err => {
         console.log(err);
         reject(err);
@@ -96,13 +109,15 @@ export class AuthService {
 
         }
         else {
+          //no user on db
           let user = new FirebaseUserModel();
           user = {
             uid: res.user.uid,
             email: res.user.email,
             displayName: res.user.displayName,
             photoURL: res.user.photoURL,
-            provider: res.user.providerData[0].providerId
+            provider: res.user.providerData[0].providerId,
+            role:'user',
           }
 
           this.userService.SetUserData(user).then(_ => {
