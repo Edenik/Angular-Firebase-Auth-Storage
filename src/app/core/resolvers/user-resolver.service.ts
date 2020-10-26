@@ -17,6 +17,7 @@ export class UserResolverService implements Resolve<FirebaseUserModel> {
     return new Promise((resolve, reject) => {
       this.userService.getCurrentUser()
       .then(res => {
+
         this.userService.getUserFromDB(res.uid).then(userFromDB => {
           this.user = { 
             uid: userFromDB.uid, 
@@ -28,12 +29,11 @@ export class UserResolverService implements Resolve<FirebaseUserModel> {
 
           return resolve(this.user);
 
-        }, error => {
+        }, error => { // get user error
           console.error(error);
-        return reject(err);
-
+          
         })
-      }, err => {
+      }, err => { // no user loged in
         this.router.navigate(['/login']);
         return reject(err);
       })
