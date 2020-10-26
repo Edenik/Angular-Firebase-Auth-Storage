@@ -12,6 +12,7 @@ export class LoginScreenComponent implements OnInit {
 
   loginForm: FormGroup;
   errorMessage: string = '';
+  isLoading: boolean = false;
 
   constructor(
     public authService: AuthService,
@@ -23,40 +24,52 @@ export class LoginScreenComponent implements OnInit {
 
   createForm() {
     this.loginForm = this.fb.group({
-      email: ['', Validators.required ],
-      password: ['',Validators.required]
+      email: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
-  tryFacebookLogin(){
+  tryFacebookLogin() {
+    this.isLoading = true;
     this.authService.doFacebookLogin()
-    .then(res => {
-      this.router.navigate(['/profile']);
-    })
+      .then(res => {
+        this.router.navigate(['/profile']);
+      }, err => {
+        this.isLoading = false;
+      })
   }
 
-  tryTwitterLogin(){
+  tryTwitterLogin() {
+    this.isLoading = true;
+
     this.authService.doTwitterLogin()
-    .then(res => {
-      this.router.navigate(['/profile']);
-    })
+      .then(res => {
+        this.router.navigate(['/profile']);
+      }, err => {
+        this.isLoading = false;
+      })
   }
 
-  tryGoogleLogin(){
+  tryGoogleLogin() {
+    this.isLoading = true;
+
     this.authService.doGoogleLogin()
-    .then(res => {
-      this.router.navigate(['/profile']);
-    })
+      .then(res => {
+        this.router.navigate(['/profile']);
+      }, err => {
+        this.isLoading = false;
+      })
   }
 
-  tryLogin(value){
+  tryLogin(value) {
+    this.isLoading = true;
     this.authService.doLogin(value)
-    .then(res => {
-      this.router.navigate(['/profile']);
-    }, err => {
-      console.log(err);
-      this.errorMessage = err.message;
-    })
+      .then(res => {
+        this.router.navigate(['/profile']);
+      }, err => {
+        console.log(err);
+        this.errorMessage = err.message;
+      })
   }
 
 

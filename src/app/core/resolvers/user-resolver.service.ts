@@ -10,30 +10,29 @@ import { FirebaseUserModel } from '../models/user.model';
 export class UserResolverService implements Resolve<FirebaseUserModel> {
 
   constructor(public userService: UserService, private router: Router) { }
+  user: FirebaseUserModel = new FirebaseUserModel();
 
   resolve(route: ActivatedRouteSnapshot) : Promise<FirebaseUserModel> {
-
-    let user = new FirebaseUserModel();
 
     return new Promise((resolve, reject) => {
       this.userService.getCurrentUser()
       .then(res => {
-        console.error(res);
-        if(res.providerData[0].providerId == 'password'){
-          user.photoURL = 'https://via.placeholder.com/400x300';
-          user.displayName = res.displayName;
-          user.provider = res.providerData[0].providerId;
-          console.log(user)
-          return resolve(user);
-        }
-        else{
-          user.photoURL = res.photoURL  || "";
-          user.displayName = res.displayName ;
-          user.provider = res.providerData[0].providerId;
-          console.log(user)
+        this.userService.getUserFromDB(res.uid).then(userFromDB => {
+          this.user = { 
+            uid: userFromDB.uid, 
+            email: userFromDB.email, 
+            displayName: userFromDB.displayName, 
+            photoURL: userFromDB.photoURL, 
+            provider: userFromDB.provider 
+          };
 
-          return resolve(user);
-        }
+          return resolve(this.user);
+
+        }, error => {
+          console.error(error);
+        return reject(err);
+
+        })
       }, err => {
         this.router.navigate(['/login']);
         return reject(err);

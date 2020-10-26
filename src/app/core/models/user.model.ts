@@ -17,6 +17,4 @@
     displayName: string;
     photoURL: string;
     provider: string;
-
-    emailVerified: boolean;
  }

@@ -1,21 +1,21 @@
-import { Injectable, NgZone } from '@angular/core';
-// import { User } from "../services/user";
+import { Injectable } from '@angular/core';
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { Router } from "@angular/router";
+import { UserService } from './user.service';
+import { FirebaseUserModel } from '../models/user.model';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(public afAuth: AngularFireAuth){}
+  constructor(public afAuth: AngularFireAuth, private userService: UserService) { }
 
-  doFacebookLogin(){
-    return new Promise<any>((resolve,reject) => {
+  doFacebookLogin() {
+    return new Promise<any>((resolve, reject) => {
       let provider = new auth.FacebookAuthProvider();
       this.afAuth.signInWithPopup(provider).then(res => {
-        resolve(res); 
+        resolve(res);
       }, err => {
         console.log(err);
         reject(err);
@@ -23,11 +23,11 @@ export class AuthService {
     })
   }
 
-  doTwitterLogin(){
-    return new Promise<any>((resolve,reject) => {
+  doTwitterLogin() {
+    return new Promise<any>((resolve, reject) => {
       let provider = new auth.TwitterAuthProvider();
       this.afAuth.signInWithPopup(provider).then(res => {
-        resolve(res); 
+        resolve(res);
       }, err => {
         console.log(err);
         reject(err);
@@ -35,11 +35,19 @@ export class AuthService {
     })
   }
 
-  doGoogleLogin(){
-    return new Promise<any>((resolve,reject) => {
+  doGoogleLogin() {
+    return new Promise<any>((resolve, reject) => {
       let provider = new auth.GoogleAuthProvider();
       this.afAuth.signInWithPopup(provider).then(res => {
-        resolve(res); 
+
+        this.saveUserOnDB(res).then(_ => {
+          resolve(res);
+
+        }, err => {
+          reject(err);
+          console.error(err);
+        })
+
       }, err => {
         console.log(err);
         reject(err);
@@ -47,34 +55,58 @@ export class AuthService {
     })
   }
 
-  doRegister(value){
-    return new Promise<any>((resolve,reject) => {
+
+
+  doRegister(value) {
+    return new Promise<any>((resolve, reject) => {
       auth().createUserWithEmailAndPassword(value.email, value.password)
-      .then(res => {
-        resolve(res);
-      }, err => reject(err))
+        .then(res => {
+          resolve(res);
+        }, err => reject(err))
     })
   }
 
-  doLogin(value){
+  doLogin(value) {
     return new Promise<any>((resolve, reject) => {
       auth().signInWithEmailAndPassword(value.email, value.password)
-      .then(res => {
-        resolve(res);
-      }, err => reject(err))
+        .then(res => {
+          resolve(res);
+        }, err => reject(err))
     })
   }
 
 
-  doLogout(){
+  doLogout() {
     return new Promise((resolve, reject) => {
-      if(auth().currentUser){
+      if (auth().currentUser) {
         this.afAuth.signOut();
         resolve();
       } else {
         reject();
       }
-    } )
+    })
+  }
+
+  saveUserOnDB(res) {
+    return new Promise<any>((resolve, reject) => {
+      let user = new FirebaseUserModel();
+      user = {
+        uid: res.user.uid,
+        email: res.user.email,
+        displayName: res.user.displayName,
+        photoURL: res.user.photoURL,
+        provider: res.user.providerData[0].providerId
+      }
+
+      this.userService.SetUserData(user).then(_ => {
+        resolve(res);
+
+      }, err => {
+        console.log(err);
+        reject(err);
+      })
+    })
+
   }
 
 }

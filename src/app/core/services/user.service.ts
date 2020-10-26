@@ -33,32 +33,36 @@ export class UserService{
  
 
  
-   SetUserData(user) {
+   SetUserData(user:FirebaseUserModel) {
+     console.error(user)
     const userRef: AngularFirestoreDocument<any> = this.db.doc(`users/${user.uid}`);
-    const userData: FirebaseUserModel = {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      emailVerified: user.emailVerified,
-      provider: user.provider
-    }
-    return userRef.set(userData, {
+
+    return userRef.set(user, {
       merge: true
     })
   }
 
   
-   updateCurrentUser(value){
-     return new Promise<any>((resolve, reject) => {
-       var user = firebase.auth().currentUser;
-       user.updateProfile({
-         displayName: value.name,
-         photoURL: user.photoURL
-       }).then(res => {
-         resolve(res);
-       }, err => reject(err))
-     })
-   }
+  //  updateCurrentUser(value){
+  //    return new Promise<any>((resolve, reject) => {
+  //      var user = firebase.auth().currentUser;
+  //      user.updateProfile({
+  //        displayName: value.name,
+  //        photoURL: user.photoURL
+  //      }).then(res => {
+  //        resolve(res);
+  //      }, err => reject(err))
+  //    })
+  //  }
+
+   getUserFromDB(uid:string) {
+    return new Promise<any>((resolve, reject) => {
+      this.db.collection<any>('users').doc(uid).valueChanges().subscribe(res => {
+        resolve(res);
+      }, err => {
+        reject(err)
+      })
+    })
+  }
  }
  
