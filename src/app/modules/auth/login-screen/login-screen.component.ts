@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, Params } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service'
 
@@ -67,7 +67,7 @@ export class LoginScreenComponent implements OnInit {
       .then(res => {
         this.router.navigate(['/profile']);
       }, err => {
-        console.log(err);
+        this.isLoading = false;
         this.errorMessage = err.message;
       })
   }

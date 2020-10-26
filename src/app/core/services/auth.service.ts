@@ -42,10 +42,8 @@ export class AuthService {
 
         this.saveUserOnDB(res).then(_ => {
           resolve(res);
-
         }, err => {
           reject(err);
-          console.error(err);
         })
 
       }, err => {
@@ -89,22 +87,39 @@ export class AuthService {
 
   saveUserOnDB(res) {
     return new Promise<any>((resolve, reject) => {
-      let user = new FirebaseUserModel();
-      user = {
-        uid: res.user.uid,
-        email: res.user.email,
-        displayName: res.user.displayName,
-        photoURL: res.user.photoURL,
-        provider: res.user.providerData[0].providerId
-      }
 
-      this.userService.SetUserData(user).then(_ => {
-        resolve(res);
+      //checks if user has doc on db
+      this.userService.getUserFromDB(res.user.uid).then(doc => {
+        if (doc) {
+          console.error(doc);
+          resolve(doc);
 
+        }
+        else {
+          let user = new FirebaseUserModel();
+          user = {
+            uid: res.user.uid,
+            email: res.user.email,
+            displayName: res.user.displayName,
+            photoURL: res.user.photoURL,
+            provider: res.user.providerData[0].providerId
+          }
+
+          this.userService.SetUserData(user).then(_ => {
+            resolve(res);
+
+          }, err => {
+            console.log(err);
+            reject(err);
+          })
+        }
       }, err => {
-        console.log(err);
         reject(err);
+
+        console.error(err);
       })
+
+
     })
 
   }
