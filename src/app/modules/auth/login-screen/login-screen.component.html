@@ -12,7 +12,8 @@
           <input type="password" class="form-control" formControlName="password">
           <label class="error">{{errorMessage}}</label>
         </div>
-        <button *ngIf="!isLoading" type="submit" (click)="tryLogin(loginForm.value)" class="btn btn-default">Login</button>
+        <button *ngIf="!isLoading" type="submit" (click)="tryLogin(loginForm.value)" class="btn btn-primary">Login</button>
+
         <button  *ngIf="isLoading" class="btn btn-primary" type="button" disabled>
           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           <span class="sr-only">Loading...</span>

@@ -68,7 +68,7 @@ export class RegisterScreenComponent implements OnInit {
           const filePath = `UsersImages/${user.uid}`;
 
           //Upload Photo
-          this.storageService.uploadProfileImage(filePath, this.selectedFile).then(uploadedPhotoURL => {
+          this.storageService.uploadImage(filePath, this.selectedFile).then(uploadedPhotoURL => {
             console.error(uploadedPhotoURL);
             const userData: FirebaseUserModel = {
               uid: user.uid,

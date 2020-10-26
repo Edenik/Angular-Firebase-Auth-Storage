@@ -14,8 +14,18 @@ export class StorageService {
 
   downloadURL: Observable<string>;
 
+  deleteImage(downloadURL:string){
+    return new Promise<any>((resolve, reject) => {
+      this.storage.storage.refFromURL(downloadURL).delete().then(res => {
+        resolve(res);
+      }, err =>{
+        reject(err);
+      })
+    })
+  }
 
-  uploadProfileImage(filePath: string, selectedFile: File) {
+
+  uploadImage(filePath: string, selectedFile: File) {
     return new Promise<any>((resolve, reject) => {
       const fileRef = this.storage.ref(filePath);
       const task = this.storage.upload(filePath, selectedFile);
