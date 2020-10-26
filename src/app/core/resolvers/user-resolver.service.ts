@@ -18,16 +18,20 @@ export class UserResolverService implements Resolve<FirebaseUserModel> {
     return new Promise((resolve, reject) => {
       this.userService.getCurrentUser()
       .then(res => {
+        console.error(res);
         if(res.providerData[0].providerId == 'password'){
-          user.image = 'https://via.placeholder.com/400x300';
-          user.name = res.displayName;
+          user.photoURL = 'https://via.placeholder.com/400x300';
+          user.displayName = res.displayName;
           user.provider = res.providerData[0].providerId;
+          console.log(user)
           return resolve(user);
         }
         else{
-          user.image = res.photoURL;
-          user.name = res.displayName;
+          user.photoURL = res.photoURL  || "";
+          user.displayName = res.displayName ;
           user.provider = res.providerData[0].providerId;
+          console.log(user)
+
           return resolve(user);
         }
       }, err => {

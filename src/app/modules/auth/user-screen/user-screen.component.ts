@@ -32,7 +32,7 @@ export class UserScreenComponent implements OnInit {
       let data = routeData['data'];
       if (data) {
         this.user = data;
-        this.createForm(this.user.name);
+        this.createForm(this.user.displayName);
       }
     })
   }
