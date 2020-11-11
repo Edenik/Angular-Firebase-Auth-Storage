@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
@@ -21,6 +22,18 @@ export class AuthService {
           reject(err);
         })
 
+      }, err => {
+        console.log(err);
+        reject(err);
+      })
+    })
+  }
+
+  resetPassword(email:string){
+    return new Promise<any>((resolve, reject) => {
+      let provider = new auth.FacebookAuthProvider();
+      this.afAuth.sendPasswordResetEmail(email).then(res => {
+       resolve(true)
       }, err => {
         console.log(err);
         reject(err);

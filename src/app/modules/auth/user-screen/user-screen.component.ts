@@ -106,6 +106,10 @@ export class UserScreenComponent implements OnInit {
 
   }
 
+  resetPassword(){
+    this.authService.resetPassword(this.user.email);
+  }
+
   changeRole(role:string){
     this.user.role = role;
     this.setUserData();

@@ -43,6 +43,7 @@
           <span class="sr-only">Loading...</span>
         </button>
 
+        <a *ngIf="!isLoading" (click)="resetPassword()" class="btn btn-primary">Reset Password</a> <br><br>
         <a *ngIf="!isLoading" (click)="save(profileForm.value)" class="btn btn-primary">Save</a>
       </div>
     </div>
